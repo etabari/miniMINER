@@ -11,6 +11,8 @@ import miniminer.utility.Converter;
 
 public class NJTree {
 
+	private final static boolean debug = true;
+	
 	private MultipleSequenceAlignment msa;
 	private BaseDistanceMatrix distMat;
 	private String treeString;
@@ -28,6 +30,10 @@ public class NJTree {
 		this.msa = msa;
 		treeString = "";
 		phyTree = new PhyloTree(msa.size());
+	}
+	
+	public NJTree(String treeString) {
+		this.treeString = treeString;
 	}
 
 	public static NJTree createTree(BaseDistanceMatrix dm) {
@@ -154,13 +160,19 @@ public class NJTree {
 		tvalid = new ValidNodeID[numSeqs + 1];
 		for (int iii = 0; iii < tvalid.length; iii++)
 			tvalid[iii] = new ValidNodeID();
-
+		
+	    /* tvalid[0] is special entry in array. it points a header of valid entry list */
+	    tvalid[0].n = 0;
+	    tvalid[0].prev = null;
+	    tvalid[0].next = tvalid[1];
+		
 		/* IMPROVEMENT 2, STEP 2 : Construct and initialize the entry chain list */
 		for (i = 0, loop_limit = lastSeq - firstSeq + 1; i <= loop_limit; ++i) {
 
 			av[i] = 0.0;
 			tkill[i] = 0;
-
+			distMat.setDistance(i, i, 0.0);
+			
 			tvalid[i].n = i;
 			if (i > 0)
 				tvalid[i].prev = tvalid[i - 1];
@@ -202,12 +214,32 @@ public class NJTree {
 		/*********************** Enter The Main Cycle ***************************/
 
 		for (nc = 1, loop_limit = (lastSeq - firstSeq + 1 - 3); nc <= loop_limit; ++nc) {
+			
 			sumd = 0.0;
 			/* IMPROVEMENT 1, STEP 4 : use sum value */
 			for (lpj = tvalid[0].next; lpj != null; lpj = lpj.next) {
 				sumd += sumCols[lpj.n];
 			}
 
+		    if (debug) 
+		    {
+	            tree.append("\n TEST: tvalid ");
+	            for (lpj = tvalid[0].next; lpj != null; lpj = lpj.next) 
+	                tree.append(String.format("%d ", lpj.n) );
+
+	            tree.append("\n TEST: sumCols ");
+	            for (lpj = tvalid[0].next; lpj != null; lpj = lpj.next)  
+	            	 tree.append(String.format("%9.5f ",sumCols[lpj.n]));
+	            
+	               
+
+	            tree.append("\n TEST: sumRows ");
+	            for (lpj = tvalid[0].next; lpj != null; lpj = lpj.next)  
+	            	 tree.append(String.format("%9.5f ",sumRows[lpj.n]));
+	            
+	            tree.append(String.format("\n TEST: step=%d sumd=%9.5f", nc, sumd));
+		    }			
+			
 			/* IMPROVEMENT 3, STEP 0 : multiply tmin and 2*fnseqs2 */
 			fnseqs2 = fnseqs - 2.0; /* Set fnseqs2 at this point. */
 			tmin = 99999.0 * 2.0 * fnseqs2;
@@ -273,11 +305,23 @@ public class NJTree {
 				}
 			}
 
+			
+	        if (debug)
+	        {
+	            tree.append(String.format("\n TEST: tmin=%9.5f mini=%d minj=%d", tmin, mini, minj));
+
+	            tree.append("\n TEST: av ");
+	            for(i = 1; i <= lastSeq - firstSeq + 1; ++i)
+	                tree.append(String.format("%9.5f ", av[i]));
+	        }
+
+
+			
+			
 			/* MEMO: always ii < jj in avobe loop, so mini < minj */
 
 			/*
-			 * .................compute branch lengths and print the results
-			 * ........
+			 * .................compute branch lengths and print the results ........
 			 */
 
 			dio = djo = 0.0;
@@ -305,10 +349,12 @@ public class NJTree {
 				typej = 1;
 			}
 
+			if (debug) 
+				tree.append(String.format("\n TEST: dio=%9.5f djo=%9.5f dmin=%9.5f bi=%9.5f bj=%9.5f typei=%d typej=%d", dio, djo, dmin, bi,bj,typei, typej));
 			if (verbose) {
 				tree.append(String.format("\n Cycle%4d     = ", nc));
 			}
-
+			
 			/*
 			 * set negative branch lengths to zero. Also set any tiny positive
 			 * branch lengths to zero.
@@ -495,11 +541,16 @@ public class NJTree {
 
 		/****************************** Last Cycle (3 Seqs. left) ********************/
 
-		nude = 1;
+	    if (debug) 
+	        tree.append("\n TEST: l ");
 
+		nude = 1;
 		for (lpi = tvalid[0].next; lpi != null; lpi = lpi.next) {
 			l[nude] = lpi.n;
 			++nude;
+			
+	        if (debug) 
+	            tree.append(lpi.n).append(" ");
 		}
 
 		b1 = (distMat.getDist1(l[1], l[2]) + distMat.getDist1(l[1], l[3]) - distMat
@@ -529,6 +580,12 @@ public class NJTree {
 		for (i = 1; i <= lastSeq - firstSeq + 1; i++) {
 			phyTree.treeDesc[lastSeq - firstSeq + 1 - 2][i] = 0;
 		}
+
+		if (debug) {
+	        tree.append(String.format("\n TEST: b1=%9.5f b2=%9.5f b3=%9.5f", b1, b2, b3));
+	        tree.append(String.format("\n TEST: branch %9.5f %9.5f %9.5f", branch[1], branch[2], branch[3]));
+		}
+
 
 		if (verbose) {
 			tree.append(String.format("\n Cycle%4d (Last cycle, trichotomy):\n", nc));
@@ -584,7 +641,8 @@ public class NJTree {
 			if (line.contains("Last cycle") || line.contains("trichotomy"))
 				break;
 			else if (line.contains("Cycle") && (matcher = pattern.matcher(line)).find()) {
-
+				//System.out.println(part.toString());
+				
 				String og_part = "";
 				int g1 = Converter.toInt(matcher.group(1));
 				int g3 = Converter.toInt(matcher.group(3));
@@ -613,8 +671,9 @@ public class NJTree {
 				}
 
 			}
-
+		//System.out.println("sum id");
 		for (String s : sum_id) {
+			//System.out.println(s);
 			String pmv_str = s.replace("=>", "");
 			int[] pmv = Converter.toIntArray(pmv_str);
 			Arrays.sort(pmv);
@@ -622,6 +681,7 @@ public class NJTree {
 			leaves.add(new String(r));
 
 		}
+		
 		return leaves;
 	}
 
