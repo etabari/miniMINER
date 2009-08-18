@@ -21,6 +21,7 @@ public class Test {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
 
 //		Pattern pattern = Pattern
 //			.compile("(?:SEQ|Node):\\s+(\\d+)\\s+\\(\\s+(-?\\d+\\.?\\d+)\\).*(?:SEQ|Node):\\s+(\\d+)\\s+\\(\\s+(-?\\d+\\.?\\d+)\\).*");
