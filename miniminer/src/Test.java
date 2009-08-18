@@ -1,3 +1,5 @@
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -9,11 +11,13 @@ import java.util.zip.DataFormatException;
 
 import sun.misc.Sort;
 import miniminer.MultipleSequenceAlignment;
+import miniminer.files.MSAFile;
 import miniminer.files.NJFile;
 import miniminer.tree.ClustalDistanceMatrix;
 import miniminer.tree.NJTree;
 import miniminer.tree.PhyloTree;
 import miniminer.utility.Converter;
+import miniminer.utility.DataFileReader;
 
 public class Test {
 
@@ -122,85 +126,160 @@ public class Test {
 		// NJFile file = new NJFile("d:\\1.txt", cmat, netree);
 		// file.createFile();
 		//
-		
+//		
+//		MultipleSequenceAlignment msa = new MultipleSequenceAlignment();
+//		try {
+//			msa.loadSeqs("D:\\a\\5FIT--_msa.seq");
+//		} catch (DataFormatException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		String treeString="";
+//		DataFileReader fr = new DataFileReader();
+//		try {
+//			BufferedReader reader = fr.readAFile("D:\\a\\e\\miner_14332\\nj_trees\\1-5_.nj");
+//			String line;
+//			while ((line = reader.readLine()) != null) {
+//				treeString +=line + "\n";
+//			}
+//			reader.close();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block\n
+//			e.printStackTrace();
+//		}
+//		
+//		
+//		
+//		
+//		NJTree njTree = new NJTree(treeString);
+//		njTree.createTree(true, true);
+//		String[] lines = njTree.getTreeString().split("\n");
+//
+//		Pattern pattern = Pattern
+//			.compile("(?:SEQ|Node):\\s+(\\d+)\\s+\\(\\s+(-?\\d+\\.?\\d+)\\).*(?:SEQ|Node):\\s+(\\d+)\\s+\\(\\s+(-?\\d+\\.?\\d+)\\).*");
+//		// Matcher matcher = pattern.matcher(inputStr);
+//		// boolean matchFound = matcher.find();
+//		Hashtable<Integer, String> part = new Hashtable<Integer, String>();
+//		HashSet<String> sum_id = new HashSet<String>();
+//		HashSet<String> leafs = new HashSet<String>();
+//		Matcher matcher;
+//
+//		for (String line : lines)
+//			if (line.contains("Last cycle") || line.contains("trichotomy"))
+//				break;
+//			else if (line.contains("Cycle") && (matcher = pattern.matcher(line)).find()) {
+//
+//				String og_part = "";
+//				int g1 = Converter.toInt(matcher.group(1));
+//				int g3 = Converter.toInt(matcher.group(3));
+//				double g2 = Converter.toDouble(matcher.group(2));
+//				double g4 = Converter.toDouble(matcher.group(4));
+//
+//				if (part.containsKey(g3)) {
+//					if (g2 == g4 || g2 == 0.0 || g4 == 0.0)
+//						og_part = part.get(g3);
+//					part.put(g1, Converter.checkString(part.get(g1)) + g3 + " " + part.get(g3)
+//						+ " ");
+//					part.remove(g3);
+//					
+//					sum_id.add(g1 + " => " + part.get(g1));
+//					if (og_part != null || og_part != "")
+//						sum_id.remove(g3 + " => " + og_part);
+//
+//						
+//				} else {
+//					if (part.get(g1) != null || g2 == g4 || g2 == 0.0 || g4 == 0.0)
+//						og_part = part.get(g1);
+//					part.put(g1, Converter.checkString(part.get(g1)) + g3);
+//					
+//					sum_id.add(g1 + " => " + part.get(g1));
+//					if (og_part != null || og_part != "")
+//						sum_id.remove(g1 + " => " + og_part);
+//				}
+//
+//			}
+//		
+//		for(Integer key: part.keySet())
+//			System.out.printf("%d=%s\n", key, part.get(key));
+//		
+//		System.out.println("\n\n all sum_id are: \n\n");
+//		for (String s: sum_id) 
+//			System.out.println(s);
+//		
+//		for (String s: sum_id) {
+//			String pmv_str = s.replace("=>", "");
+//			int [] pmv = Converter.toIntArray(pmv_str); 
+//			Arrays.sort(pmv);
+//			
+//			String r = Converter.toString(pmv);
+//			
+//			leafs.add(new String(r));
+//				
+//			
+//		}
+//		
+//		System.out.println("\n\n all leafs are: \n\n");
+//		for (String s: leafs) 
+//			System.out.println(s);
+
 		MultipleSequenceAlignment msa = new MultipleSequenceAlignment();
+		
 		try {
-			msa.loadSeqs("D:\\a\\5FIT--_msa.seq");
+			msa.loadSeqs("d:\\a\\e\\2CND--_msa.seq");
 		} catch (DataFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		NJTree njTree = new NJTree(msa);
-		njTree.createTree(true, true);
-		String[] lines = njTree.getTreeString().split("\n");
-
-		Pattern pattern = Pattern
-			.compile("(?:SEQ|Node):\\s+(\\d+)\\s+\\(\\s+(-?\\d+\\.?\\d+)\\).*(?:SEQ|Node):\\s+(\\d+)\\s+\\(\\s+(-?\\d+\\.?\\d+)\\).*");
-		// Matcher matcher = pattern.matcher(inputStr);
-		// boolean matchFound = matcher.find();
-		Hashtable<Integer, String> part = new Hashtable<Integer, String>();
-		HashSet<String> sum_id = new HashSet<String>();
-		HashSet<String> leafs = new HashSet<String>();
-		Matcher matcher;
-
-		for (String line : lines)
-			if (line.contains("Last cycle") || line.contains("trichotomy"))
-				break;
-			else if (line.contains("Cycle") && (matcher = pattern.matcher(line)).find()) {
-
-				String og_part = "";
-				int g1 = Converter.toInt(matcher.group(1));
-				int g3 = Converter.toInt(matcher.group(3));
-				double g2 = Converter.toDouble(matcher.group(2));
-				double g4 = Converter.toDouble(matcher.group(4));
-
-				if (part.containsKey(g3)) {
-					if (g2 == g4 || g2 == 0.0 || g4 == 0.0)
-						og_part = part.get(g3);
-					part.put(g1, Converter.checkString(part.get(g1)) + g3 + " " + part.get(g3)
-						+ " ");
-					part.remove(g3);
-					
-					sum_id.add(g1 + " => " + part.get(g1));
-					if (og_part != null || og_part != "")
-						sum_id.remove(g3 + " => " + og_part);
-
-						
-				} else {
-					if (part.get(g1) != null || g2 == g4 || g2 == 0.0 || g4 == 0.0)
-						og_part = part.get(g1);
-					part.put(g1, Converter.checkString(part.get(g1)) + g3);
-					
-					sum_id.add(g1 + " => " + part.get(g1));
-					if (og_part != null || og_part != "")
-						sum_id.remove(g1 + " => " + og_part);
-				}
-
-			}
+		msa = msa.getMasked(50);
 		
-		for(Integer key: part.keySet())
-			System.out.printf("%d=%s\n", key, part.get(key));
-		
-		System.out.println("\n\n all sum_id are: \n\n");
-		for (String s: sum_id) 
+		NJTree njt = new NJTree(msa);
+		njt.createTree(false, false);
+
+		HashSet<String> leavesAll = njt.createPmSum();
+		int wholeLeafCount = leavesAll.size();
+		System.out.println("Leaves All: ");
+		for (String s : leavesAll) {
 			System.out.println(s);
-		
-		for (String s: sum_id) {
-			String pmv_str = s.replace("=>", "");
-			int [] pmv = Converter.toIntArray(pmv_str); 
-			Arrays.sort(pmv);
-			
-			String r = Converter.toString(pmv);
-			
-			leafs.add(new String(r));
-				
-			
 		}
 		
-		System.out.println("\n\n all leafs are: \n\n");
-		for (String s: leafs) 
-			System.out.println(s);
+		String treeString="";
 
+		try {
+	//		BufferedReader reader = DataFileReader.readAFile("D:\\a\\e\\miner_14332\\nj_trees\\nj (248).nj");
+			BufferedReader reader = DataFileReader.readAFile("D:\\a\\e\\miner_1432_e\\njtrees\\nj (248).nj");
+			String line;
+			while ((line = reader.readLine()) != null) {
+				treeString +=line + "\n";
+			}
+			reader.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block\n
+			e.printStackTrace();
+		}
+		
+		
+		NJTree njTree = new NJTree(treeString);
+
+		HashSet<String> leaves = njTree.createPmSum();
+		
+		System.out.println("Leaves: ");
+		
+		int leafCount = leaves.size();
+
+		int similar = 0;
+		for (String s : leaves)
+			if (leavesAll.contains(s)) {
+				similar++;
+				System.out.println("+ "+ s);
+			}
+			else 
+				System.out.println("- "+ s);
+		int score = wholeLeafCount - similar + leafCount - similar;
+
+		System.out.printf("\nSimilar: %d, wholeleaf:%d, leaf:%d Score %d\n",similar, wholeLeafCount, leafCount, score);
+
+		
 	}
 
 

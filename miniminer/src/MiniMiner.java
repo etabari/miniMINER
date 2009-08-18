@@ -1,6 +1,7 @@
 import java.util.HashSet;
 
 import miniminer.MultipleSequenceAlignment;
+import miniminer.files.OutputFile;
 import miniminer.tree.NJTree;
 
 public class MiniMiner {
@@ -79,22 +80,29 @@ public class MiniMiner {
 		HashSet<String> leavesAll = tree.createPmSum();
 		score = new int[windowTree.length];
 		int wholeLeafCount = leavesAll.size();
-
+		 
+		//LeavesFile l = new LeavesFile("d:\\a\\e\\out.txt");
 		int scoreSum = 0;
 		for (int i = 0; i < windowTree.length; i++) {
 
 			HashSet<String> leaves = windowTree[i].createPmSum();
-
+			
 			int leafCount = leaves.size();
 
 			int similar = 0;
 			for (String s : leaves)
 				if (leavesAll.contains(s))
 					similar++;
+			
 			score[i] = wholeLeafCount - similar + leafCount - similar;
-
+			
+			if (i==0)
+			System.out.println(leaves);
+			System.out.printf("score[%d]: %d (all=%d, this=%d, sim=%d)\n",i+1, score[i], wholeLeafCount, leafCount, similar);
+			
 			scoreSum += score[i];
 		}
+		//l.close();
 		calculateZScores(scoreSum);
 	}
 
