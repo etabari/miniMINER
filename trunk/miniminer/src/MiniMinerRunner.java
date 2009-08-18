@@ -147,8 +147,8 @@ public class MiniMinerRunner {
 			for (String s : args) {
 				if (s.startsWith("-w"))
 					windowSize = Converter.toInt(s.substring(2), 5);
-				// if (s.equalsIgnoreCase("-s"))
-				// storeAndCreateSubAlignments = true;
+				 if (s.equalsIgnoreCase("-s"))
+					 storeAndCreateSubAlignments = true;
 
 			}
 			
@@ -158,6 +158,7 @@ public class MiniMinerRunner {
 			MiniMiner mm = new MiniMiner(msa, clustalTossGaps, kimura);
 			System.out.println("Creating All NJ Trees...");
 			mm.createAll(windowSize, storeAndCreateSubAlignments);
+			
 			System.out.println("Creating All Scores...");
 			mm.createScores();
 
