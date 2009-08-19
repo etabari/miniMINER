@@ -214,7 +214,7 @@ void NJTree::generateTree(clustalw::PhyloTree* phyTree, clustalw::DistMatrix* di
         (*tree) << "\n\n\t\t\tNeighbor-joining Method\n"
                 << "\n Saitou, N. and Nei, M. (1987)" << " The Neighbor-joining Method:"
                 << "\n A New Method for Reconstructing Phylogenetic Trees."
-                << "\n Mol. Biol. Evol., 4(4), 406-425\n" << "\n\n This is an UNROOTED tree\n"
+                << "\n Mol. Biol. Evol, 4(4), 406-425\n" << "\n\n This is an UNROOTED tree\n"
                 << "\n Numbers in parentheses are branch lengths\n\n";
     }
 

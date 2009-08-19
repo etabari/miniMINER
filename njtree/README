@@ -29,7 +29,11 @@ all commands from now on assumes that you are in the clustal folder
 files contained in this folder should be checked out to src/ folder under clustalw files
 using this command:
 
+
 svn co https://miniminer.svn.sourceforge.net/svnroot/miniminer/trunk/njtree src
+svn co https://miniminer.svn.sourceforge.net/svnroot/miniminer/trunk/njtree src/tree
+
+
 
 furthur build could be done only by making the project.
 
