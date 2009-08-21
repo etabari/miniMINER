@@ -1,5 +1,10 @@
 package miniminer.utility;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 public final class Converter {
 
 	public static int toBound(int value, int min, int max) {
@@ -66,4 +71,12 @@ public final class Converter {
 		}
 		return new String(s);
 	}
+	
+	public static <T extends Comparable<? super T>> Collection<T> sortCollection(Collection<T> c) {
+		List<T> sortedC = new ArrayList<T>();
+		sortedC.addAll(c);
+		Collections.sort(sortedC);
+		return sortedC;
+	}
+	
 }

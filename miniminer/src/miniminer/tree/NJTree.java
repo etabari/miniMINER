@@ -1,6 +1,8 @@
 package miniminer.tree;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.regex.Matcher;
@@ -12,7 +14,7 @@ import miniminer.utility.Converter;
 public class NJTree {
 
 	private final static boolean debug = true;
-	
+
 	private MultipleSequenceAlignment msa;
 	private BaseDistanceMatrix distMat;
 	private String treeString;
@@ -31,7 +33,7 @@ public class NJTree {
 		treeString = "";
 		phyTree = new PhyloTree(msa.size());
 	}
-	
+
 	public NJTree(String treeString) {
 		this.treeString = treeString;
 	}
@@ -76,7 +78,8 @@ public class NJTree {
 	// return leaves;
 	// }
 
-	protected void generateTree(BaseDistanceMatrix distMat, int firstSeq, int lastSeq, int numSeqs) {
+	protected void generateTree(BaseDistanceMatrix distMat, int firstSeq,
+			int lastSeq, int numSeqs) {
 
 		StringBuilder tree = new StringBuilder();
 
@@ -121,9 +124,12 @@ public class NJTree {
 
 		if (verbose) {
 			tree.append("\n\n\t\t\tNeighbor-joining Method\n");
-			tree.append("\n Saitou, N. and Nei, M. (1987) The Neighbor-joining Method:");
-			tree.append("\n A New Method for Reconstructing Phylogenetic Trees.");
-			tree.append("\n Mol. Biol. Evol., 4(4), 406-425\n\n\n This is an UNROOTED tree\n");
+			tree
+					.append("\n Saitou, N. and Nei, M. (1987) The Neighbor-joining Method:");
+			tree
+					.append("\n A New Method for Reconstructing Phylogenetic Trees.");
+			tree
+					.append("\n Mol. Biol. Evol., 4(4), 406-425\n\n\n This is an UNROOTED tree\n");
 			tree.append("\n Numbers in parentheses are branch lengths\n\n");
 		}
 
@@ -131,7 +137,9 @@ public class NJTree {
 			if (verbose) {
 				double d = distMat.getDist1(firstSeq, firstSeq + 1);
 				String line = String
-					.format("Cycle   1     =  SEQ:   1 (%9.5f) joins  SEQ:   2 (%9.5f)", d, d);
+						.format(
+								"Cycle   1     =  SEQ:   1 (%9.5f) joins  SEQ:   2 (%9.5f)",
+								d, d);
 				tree.append(line);
 			}
 			treeString = new String(tree);
@@ -160,19 +168,22 @@ public class NJTree {
 		tvalid = new ValidNodeID[numSeqs + 1];
 		for (int iii = 0; iii < tvalid.length; iii++)
 			tvalid[iii] = new ValidNodeID();
-		
-	    /* tvalid[0] is special entry in array. it points a header of valid entry list */
-	    tvalid[0].n = 0;
-	    tvalid[0].prev = null;
-	    tvalid[0].next = tvalid[1];
-		
+
+		/*
+		 * tvalid[0] is special entry in array. it points a header of valid
+		 * entry list
+		 */
+		tvalid[0].n = 0;
+		tvalid[0].prev = null;
+		tvalid[0].next = tvalid[1];
+
 		/* IMPROVEMENT 2, STEP 2 : Construct and initialize the entry chain list */
 		for (i = 0, loop_limit = lastSeq - firstSeq + 1; i <= loop_limit; ++i) {
 
 			av[i] = 0.0;
 			tkill[i] = 0;
 			distMat.setDistance(i, i, 0.0);
-			
+
 			tvalid[i].n = i;
 			if (i > 0)
 				tvalid[i].prev = tvalid[i - 1];
@@ -214,32 +225,30 @@ public class NJTree {
 		/*********************** Enter The Main Cycle ***************************/
 
 		for (nc = 1, loop_limit = (lastSeq - firstSeq + 1 - 3); nc <= loop_limit; ++nc) {
-			
+
 			sumd = 0.0;
 			/* IMPROVEMENT 1, STEP 4 : use sum value */
 			for (lpj = tvalid[0].next; lpj != null; lpj = lpj.next) {
 				sumd += sumCols[lpj.n];
 			}
 
-		    if (debug) 
-		    {
-	            tree.append("\n TEST: tvalid ");
-	            for (lpj = tvalid[0].next; lpj != null; lpj = lpj.next) 
-	                tree.append(String.format("%d ", lpj.n) );
+			if (debug) {
+				tree.append("\n TEST: tvalid ");
+				for (lpj = tvalid[0].next; lpj != null; lpj = lpj.next)
+					tree.append(String.format("%d ", lpj.n));
 
-	            tree.append("\n TEST: sumCols ");
-	            for (lpj = tvalid[0].next; lpj != null; lpj = lpj.next)  
-	            	 tree.append(String.format("%9.5f ",sumCols[lpj.n]));
-	            
-	               
+				tree.append("\n TEST: sumCols ");
+				for (lpj = tvalid[0].next; lpj != null; lpj = lpj.next)
+					tree.append(String.format("%9.5f ", sumCols[lpj.n]));
 
-	            tree.append("\n TEST: sumRows ");
-	            for (lpj = tvalid[0].next; lpj != null; lpj = lpj.next)  
-	            	 tree.append(String.format("%9.5f ",sumRows[lpj.n]));
-	            
-	            tree.append(String.format("\n TEST: step=%d sumd=%9.5f", nc, sumd));
-		    }			
-			
+				tree.append("\n TEST: sumRows ");
+				for (lpj = tvalid[0].next; lpj != null; lpj = lpj.next)
+					tree.append(String.format("%9.5f ", sumRows[lpj.n]));
+
+				tree.append(String.format("\n TEST: step=%d sumd=%9.5f", nc,
+						sumd));
+			}
+
 			/* IMPROVEMENT 3, STEP 0 : multiply tmin and 2*fnseqs2 */
 			fnseqs2 = fnseqs - 2.0; /* Set fnseqs2 at this point. */
 			tmin = 99999.0 * 2.0 * fnseqs2;
@@ -305,23 +314,21 @@ public class NJTree {
 				}
 			}
 
-			
-	        if (debug)
-	        {
-	            tree.append(String.format("\n TEST: tmin=%9.5f mini=%d minj=%d", tmin, mini, minj));
+			if (debug) {
+				tree.append(String
+						.format("\n TEST: tmin=%9.5f mini=%d minj=%d", tmin,
+								mini, minj));
 
-	            tree.append("\n TEST: av ");
-	            for(i = 1; i <= lastSeq - firstSeq + 1; ++i)
-	                tree.append(String.format("%9.5f ", av[i]));
-	        }
+				tree.append("\n TEST: av ");
+				for (i = 1; i <= lastSeq - firstSeq + 1; ++i)
+					tree.append(String.format("%9.5f ", av[i]));
+			}
 
-
-			
-			
 			/* MEMO: always ii < jj in avobe loop, so mini < minj */
 
 			/*
-			 * .................compute branch lengths and print the results ........
+			 * .................compute branch lengths and print the results
+			 * ........
 			 */
 
 			dio = djo = 0.0;
@@ -349,12 +356,16 @@ public class NJTree {
 				typej = 1;
 			}
 
-			if (debug) 
-				tree.append(String.format("\n TEST: dio=%9.5f djo=%9.5f dmin=%9.5f bi=%9.5f bj=%9.5f typei=%d typej=%d", dio, djo, dmin, bi,bj,typei, typej));
+			if (debug)
+				tree
+						.append(String
+								.format(
+										"\n TEST: dio=%9.5f djo=%9.5f dmin=%9.5f bi=%9.5f bj=%9.5f typei=%d typej=%d",
+										dio, djo, dmin, bi, bj, typei, typej));
 			if (verbose) {
 				tree.append(String.format("\n Cycle%4d     = ", nc));
 			}
-			
+
 			/*
 			 * set negative branch lengths to zero. Also set any tiny positive
 			 * branch lengths to zero.
@@ -368,9 +379,11 @@ public class NJTree {
 
 			if (verbose) {
 				if (typei == 0) {
-					tree.append(String.format("Node:%4d (%9.5f) joins ", mini, bi));
+					tree.append(String.format("Node:%4d (%9.5f) joins ", mini,
+							bi));
 				} else {
-					tree.append(String.format(" SEQ:%4d (%9.5f) joins ", mini, bi));
+					tree.append(String.format(" SEQ:%4d (%9.5f) joins ", mini,
+							bi));
 				}
 
 				if (typej == 0) {
@@ -541,20 +554,20 @@ public class NJTree {
 
 		/****************************** Last Cycle (3 Seqs. left) ********************/
 
-	    if (debug) 
-	        tree.append("\n TEST: l ");
+		if (debug)
+			tree.append("\n TEST: l ");
 
 		nude = 1;
 		for (lpi = tvalid[0].next; lpi != null; lpi = lpi.next) {
 			l[nude] = lpi.n;
 			++nude;
-			
-	        if (debug) 
-	            tree.append(lpi.n).append(" ");
+
+			if (debug)
+				tree.append(lpi.n).append(" ");
 		}
 
 		b1 = (distMat.getDist1(l[1], l[2]) + distMat.getDist1(l[1], l[3]) - distMat
-			.getDist1(l[2], l[3])) * 0.5;
+				.getDist1(l[2], l[3])) * 0.5;
 		b2 = distMat.getDist1(l[1], l[2]) - b1;
 		b3 = distMat.getDist1(l[1], l[3]) - b1;
 
@@ -582,19 +595,22 @@ public class NJTree {
 		}
 
 		if (debug) {
-	        tree.append(String.format("\n TEST: b1=%9.5f b2=%9.5f b3=%9.5f", b1, b2, b3));
-	        tree.append(String.format("\n TEST: branch %9.5f %9.5f %9.5f", branch[1], branch[2], branch[3]));
+			tree.append(String.format("\n TEST: b1=%9.5f b2=%9.5f b3=%9.5f",
+					b1, b2, b3));
+			tree.append(String.format("\n TEST: branch %9.5f %9.5f %9.5f",
+					branch[1], branch[2], branch[3]));
 		}
 
-
 		if (verbose) {
-			tree.append(String.format("\n Cycle%4d (Last cycle, trichotomy):\n", nc));
+			tree.append(String.format(
+					"\n Cycle%4d (Last cycle, trichotomy):\n", nc));
 		}
 
 		for (i = 1; i <= 3; ++i) {
 			if (av[l[i]] > 0.0) {
 				if (verbose) {
-					tree.append(String.format("\n\t\t Node:%4d (%9.5f) ", l[i], branch[i]));
+					tree.append(String.format("\n\t\t Node:%4d (%9.5f) ", l[i],
+							branch[i]));
 				}
 				for (k = lastSeq - firstSeq + 1 - 3; k >= 1; k--)
 					if (phyTree.treeDesc[k][l[i]] == 1) {
@@ -606,7 +622,8 @@ public class NJTree {
 					}
 			} else {
 				if (verbose) {
-					tree.append(String.format("\n\t\t  SEQ:%4d (%9.5f) ", l[i], branch[i]));
+					tree.append(String.format("\n\t\t  SEQ:%4d (%9.5f) ", l[i],
+							branch[i]));
 				}
 				phyTree.treeDesc[lastSeq - firstSeq + 1 - 2][l[i]] = i;
 			}
@@ -629,7 +646,7 @@ public class NJTree {
 		String[] lines = treeString.split("\n");
 
 		Pattern pattern = Pattern
-			.compile("(?:SEQ|Node):\\s+(\\d+)\\s+\\(\\s+(-?\\d+\\.?\\d+)\\).*(?:SEQ|Node):\\s+(\\d+)\\s+\\(\\s+(-?\\d+\\.?\\d+)\\).*");
+				.compile("(?:SEQ|Node):\\s+(\\d+)\\s+\\(\\s+(-?\\d+\\.?\\d+)\\).*(?:SEQ|Node):\\s+(\\d+)\\s+\\(\\s+(-?\\d+\\.?\\d+)\\).*");
 		// Matcher matcher = pattern.matcher(inputStr);
 		// boolean matchFound = matcher.find();
 		Hashtable<Integer, String> part = new Hashtable<Integer, String>();
@@ -640,40 +657,95 @@ public class NJTree {
 		for (String line : lines)
 			if (line.contains("Last cycle") || line.contains("trichotomy"))
 				break;
-			else if (line.contains("Cycle") && (matcher = pattern.matcher(line)).find()) {
-				//System.out.println(part.toString());
-				
+			else if (line.contains("Cycle")
+					&& (matcher = pattern.matcher(line)).find()) {
+				// System.out.println(part.toString());
+
 				String og_part = "";
 				int g1 = Converter.toInt(matcher.group(1));
 				int g3 = Converter.toInt(matcher.group(3));
 				double g2 = Converter.toDouble(matcher.group(2));
 				double g4 = Converter.toDouble(matcher.group(4));
 
+				if (debug) {
+					System.out.printf("TEST: Line: %s\n", line);
+					System.out.print("TEST: ");
+				}
+
 				if (part.containsKey(g3)) {
-					if (g2 == g4 || g2 == 0.0 || g4 == 0.0)
+					if (debug)
+						System.out.printf("[%d in ] ", g3);
+
+					if (g2 == g4 || g2 == 0.0 || g4 == 0.0) {
 						og_part = part.get(g3);
-					part.put(g1, Converter.checkString(part.get(g1)) + g3 + " " + part.get(g3)
-						+ " ");
+						if (debug)
+							System.out.print("[eqz] ");
+					}
+
+					part.put(g1, Converter.checkString(part.get(g1)) + g3 + " "
+							+ part.get(g3) + " ");
 					part.remove(g3);
 
 					sum_id.add(g1 + " => " + part.get(g1));
-					if (og_part != null || og_part != "")
+
+					if (og_part != null || og_part != "") {
 						sum_id.remove(g3 + " => " + og_part);
 
+						if (debug)
+							System.out.print("[rm] ");
+					}
+
 				} else {
-					if (part.get(g1) != null || g2 == g4 || g2 == 0.0 || g4 == 0.0)
+					System.out.printf("[%d out] ", g3);
+
+					if (part.get(g1) != null || g2 == g4 || g2 == 0.0 || g4 == 0.0) {
 						og_part = part.get(g1);
+						if (debug)
+							System.out.print("[eqz] ");
+					}
+					
 					part.put(g1, Converter.checkString(part.get(g1)) + g3);
 
 					sum_id.add(g1 + " => " + part.get(g1));
-					if (og_part != null || og_part != "")
+				
+					if (og_part != null || og_part != "") {
 						sum_id.remove(g1 + " => " + og_part);
+
+						if (debug)
+							System.out.print("[rm] ");
+					}
+				}
+
+				if (debug) {
+
+					System.out.print("\nTEST: Part {");
+					ArrayList<String> ll = new ArrayList<String>(part.size());
+					for (Integer k : part.keySet())
+						ll.add(String.valueOf(k));
+					for (String k : Converter.sortCollection(ll))
+						System.out.printf("%s=%s , ", k, part.get(Integer
+								.parseInt(k)));
+					System.out.print("}\n");
+
+					System.out.print("TEST: Sum_id {");
+					for (String k : Converter.sortCollection(sum_id))
+						System.out.printf("%s , ", k);
+
+					System.out.print("}\n\n");
 				}
 
 			}
-		//System.out.println("sum id");
+
+		if (debug) {
+			System.out.print("\nTEST: sum_id: ");
+			Collection<String> ll = new ArrayList<String>(sum_id.size());
+			for (String s : Converter.sortCollection(sum_id))
+				ll.add(s + " ");
+
+			System.out.println(ll);
+		}
+
 		for (String s : sum_id) {
-			//System.out.println(s);
 			String pmv_str = s.replace("=>", "");
 			int[] pmv = Converter.toIntArray(pmv_str);
 			Arrays.sort(pmv);
@@ -681,7 +753,7 @@ public class NJTree {
 			leaves.add(new String(r));
 
 		}
-		
+
 		return leaves;
 	}
 
