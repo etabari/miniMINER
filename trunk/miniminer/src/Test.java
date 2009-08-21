@@ -1,23 +1,3 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Set;
-import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.zip.DataFormatException;
-
-import sun.misc.Sort;
-import miniminer.MultipleSequenceAlignment;
-import miniminer.files.MSAFile;
-import miniminer.files.NJFile;
-import miniminer.tree.ClustalDistanceMatrix;
-import miniminer.tree.NJTree;
-import miniminer.tree.PhyloTree;
-import miniminer.utility.Converter;
-import miniminer.utility.DataFileReader;
 
 public class Test {
 
@@ -26,7 +6,7 @@ public class Test {
 	 */
 	public static void main(String[] args) {
 		
-
+		MiniMinerRunner.main(args);
 //		Pattern pattern = Pattern
 //			.compile("(?:SEQ|Node):\\s+(\\d+)\\s+\\(\\s+(-?\\d+\\.?\\d+)\\).*(?:SEQ|Node):\\s+(\\d+)\\s+\\(\\s+(-?\\d+\\.?\\d+)\\).*");
 //
@@ -222,64 +202,64 @@ public class Test {
 //		System.out.println("\n\n all leafs are: \n\n");
 //		for (String s: leafs) 
 //			System.out.println(s);
-
-		MultipleSequenceAlignment msa = new MultipleSequenceAlignment();
-		
-		try {
-			msa.loadSeqs("d:\\a\\e\\2CND--_msa.seq");
-		} catch (DataFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		msa = msa.getMasked(50);
-		
-		NJTree njt = new NJTree(msa);
-		njt.createTree(false, false);
-
-		HashSet<String> leavesAll = njt.createPmSum();
-		int wholeLeafCount = leavesAll.size();
-		System.out.println("Leaves All: ");
-		for (String s : leavesAll) {
-			System.out.println(s);
-		}
-		
-		String treeString="";
-
-		try {
-	//		BufferedReader reader = DataFileReader.readAFile("D:\\a\\e\\miner_14332\\nj_trees\\nj (248).nj");
-			BufferedReader reader = DataFileReader.readAFile("D:\\a\\e\\miner_1432_e\\njtrees\\nj (248).nj");
-			String line;
-			while ((line = reader.readLine()) != null) {
-				treeString +=line + "\n";
-			}
-			reader.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block\n
-			e.printStackTrace();
-		}
-		
-		
-		NJTree njTree = new NJTree(treeString);
-
-		HashSet<String> leaves = njTree.createPmSum();
-		
-		System.out.println("Leaves: ");
-		
-		int leafCount = leaves.size();
-
-		int similar = 0;
-		for (String s : leaves)
-			if (leavesAll.contains(s)) {
-				similar++;
-				System.out.println("+ "+ s);
-			}
-			else 
-				System.out.println("- "+ s);
-		int score = wholeLeafCount - similar + leafCount - similar;
-
-		System.out.printf("\nSimilar: %d, wholeleaf:%d, leaf:%d Score %d\n",similar, wholeLeafCount, leafCount, score);
-
-		
+//
+//		MultipleSequenceAlignment msa = new MultipleSequenceAlignment();
+//		
+//		try {
+//			msa.loadSeqs("d:\\a\\e\\2CND--_msa.seq");
+//		} catch (DataFormatException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		msa = msa.getMasked(50);
+//		
+//		NJTree njt = new NJTree(msa);
+//		njt.createTree(false, false);
+//
+//		HashSet<String> leavesAll = njt.createPmSum();
+//		int wholeLeafCount = leavesAll.size();
+//		System.out.println("Leaves All: ");
+//		for (String s : leavesAll) {
+//			System.out.println(s);
+//		}
+//		
+//		String treeString="";
+//
+//		try {
+//	//		BufferedReader reader = DataFileReader.readAFile("D:\\a\\e\\miner_14332\\nj_trees\\nj (248).nj");
+//			BufferedReader reader = DataFileReader.readAFile("D:\\a\\e\\miner_1432_e\\njtrees\\nj (248).nj");
+//			String line;
+//			while ((line = reader.readLine()) != null) {
+//				treeString +=line + "\n";
+//			}
+//			reader.close();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block\n
+//			e.printStackTrace();
+//		}
+//		
+//		
+//		NJTree njTree = new NJTree(treeString);
+//
+//		HashSet<String> leaves = njTree.createPmSum();
+//		
+//		System.out.println("Leaves: ");
+//		
+//		int leafCount = leaves.size();
+//
+//		int similar = 0;
+//		for (String s : leaves)
+//			if (leavesAll.contains(s)) {
+//				similar++;
+//				System.out.println("+ "+ s);
+//			}
+//			else 
+//				System.out.println("- "+ s);
+//		int score = wholeLeafCount - similar + leafCount - similar;
+//
+//		System.out.printf("\nSimilar: %d, wholeleaf:%d, leaf:%d Score %d\n",similar, wholeLeafCount, leafCount, score);
+//
+//		
 	}
 
 

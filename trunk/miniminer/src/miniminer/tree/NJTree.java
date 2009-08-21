@@ -669,15 +669,16 @@ public class NJTree {
 
 				if (debug) {
 					System.out.printf("TEST: Line: %s\n", line);
-					System.out.printf("TEST: (%d,%d,%6.5f,%6.5f) ",g1,g3,g2,g4);
+					System.out.printf("TEST: (%d,%d,%6.5f,%6.5f) ", g1, g3, g2,
+							g4);
 				}
 
 				if (part.containsKey(g3)) {
 					if (debug)
 						System.out.printf("[%d in ] ", g3);
-					
-					//TODO I Changed this line of code so that it matches Miner  
-					if (g2 == g4 /*|| g2 == 0.0 || g4 == 0.0*/) {
+
+					// TODO I Changed this line of code so that it matches Miner
+					if (g2 == g4 /* || g2 == 0.0 || g4 == 0.0 */) {
 						og_part = part.get(g3);
 						if (debug)
 							System.out.print("[eqz] ");
@@ -697,11 +698,14 @@ public class NJTree {
 					}
 
 				} else {
-					System.out.printf("[%d out] ", g3);
+					if (debug)
+						System.out.printf("[%d out] ", g3);
 
-					//TODO I Changed this line of code so that it matches Miner   
-					if (part.get(g1) != null || g2 == g4 /*|| g2 == 0.0
-							|| g4 == 0.0*/) {
+					// TODO I Changed this line of code so that it matches Miner
+					if (part.get(g1) != null || g2 == g4 /*
+														 * || g2 == 0.0 || g4 ==
+														 * 0.0
+														 */) {
 						og_part = part.get(g1);
 						if (debug)
 							System.out.print("[eqz] ");
