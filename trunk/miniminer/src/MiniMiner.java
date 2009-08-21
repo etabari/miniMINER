@@ -1,10 +1,13 @@
+import java.util.Collection;
 import java.util.HashSet;
 
 import miniminer.MultipleSequenceAlignment;
-import miniminer.files.OutputFile;
 import miniminer.tree.NJTree;
+import miniminer.utility.Converter;
 
 public class MiniMiner {
+
+	public final static boolean debug = true;
 
 	private MultipleSequenceAlignment msa;
 	private NJTree tree;
@@ -17,7 +20,8 @@ public class MiniMiner {
 	private int[] score;
 	private double[] zScore;
 
-	public MiniMiner(MultipleSequenceAlignment msa, boolean tossGaps, boolean kimura) {
+	public MiniMiner(MultipleSequenceAlignment msa, boolean tossGaps,
+			boolean kimura) {
 		this.msa = msa;
 		this.tossGaps = tossGaps;
 		this.kimura = kimura;
@@ -80,29 +84,35 @@ public class MiniMiner {
 		HashSet<String> leavesAll = tree.createPmSum();
 		score = new int[windowTree.length];
 		int wholeLeafCount = leavesAll.size();
-		 
-		//LeavesFile l = new LeavesFile("d:\\a\\e\\out.txt");
+
+		// LeavesFile l = new LeavesFile("d:\\a\\e\\out.txt");
 		int scoreSum = 0;
 		for (int i = 0; i < windowTree.length; i++) {
-
+			if (debug) {
+				System.out.printf("TEST: Working on Tree %d\n", i+1);
+			}
 			HashSet<String> leaves = windowTree[i].createPmSum();
-			
+
 			int leafCount = leaves.size();
 
 			int similar = 0;
 			for (String s : leaves)
 				if (leavesAll.contains(s))
 					similar++;
-			
+
 			score[i] = wholeLeafCount - similar + leafCount - similar;
-			
-			if (i==0)
-			System.out.println(leaves);
-			System.out.printf("score[%d]: %d (all=%d, this=%d, sim=%d)\n",i+1, score[i], wholeLeafCount, leafCount, similar);
-			
+
+			if (debug) {
+				System.out.printf("\nTEST: leaves[%d] :",i+1);
+				Collection<String> ll = Converter.sortCollection(leaves);
+				System.out.println(ll);
+	    		System.out.println();
+				System.out.printf("TEST: score: %d (all=%d, this=%d, sim=%d)\n\n",
+						score[i], wholeLeafCount, leafCount, similar);
+			}
 			scoreSum += score[i];
 		}
-		//l.close();
+		// l.close();
 		calculateZScores(scoreSum);
 	}
 
