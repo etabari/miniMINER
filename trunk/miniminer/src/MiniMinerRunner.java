@@ -32,6 +32,7 @@ public class MiniMinerRunner {
 			System.err.println("         It is considered 50 if not specified.");
 
 			System.err.println("   -k: include -k to apply Kimura method");
+			System.err.println("   -b: include -k to get exact MINER results (used for -m mode)");
 			System.err.println("   -j: include -j to apply Clustal Exclude Gaps methods (removes all gaps if a sequence has a gap)");
 
 			System.err.println("   -wXX: include -w with a number to determine the window size");
@@ -55,15 +56,17 @@ public class MiniMinerRunner {
 		int tossGaps = 100;
 		boolean kimura = false;
 		boolean clustalTossGaps = false;
+		boolean minerBug = false;
 
 		for (String s : args) {
 			if (s.startsWith("-t"))
 				tossGaps = Converter.toBound(Converter.toInt(s.substring(2), 50), 0, 100);
 			if (s.equalsIgnoreCase("-k"))
 				kimura = true;
-			if (s.equalsIgnoreCase("-i"))
+			if (s.equalsIgnoreCase("-j"))
 				clustalTossGaps = true;
-
+			if (s.equalsIgnoreCase("-b"))
+				minerBug = true;
 		}
 
 		String in_filename = args[args.length - 1];
@@ -160,7 +163,7 @@ public class MiniMinerRunner {
 			mm.createAll(windowSize, storeAndCreateSubAlignments);
 			
 			System.out.println("Creating All Scores...");
-			mm.createScores();
+			mm.createScores(minerBug);
 
 			String fn = in_filename + ".scores.txt";
 			ScoreFile scoreFile = new ScoreFile(fn, mm.getScores());

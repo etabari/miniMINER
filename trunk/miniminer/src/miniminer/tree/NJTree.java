@@ -13,7 +13,7 @@ import miniminer.utility.Converter;
 
 public class NJTree {
 
-	private final static boolean debug = false;
+	private final static boolean debug = true;
 
 	private MultipleSequenceAlignment msa;
 	private BaseDistanceMatrix distMat;
@@ -641,7 +641,7 @@ public class NJTree {
 
 	}
 
-	public HashSet<String> createPmSum() {
+	public HashSet<String> createPmSum(boolean minerBug) {
 
 		String[] lines = treeString.split("\n");
 
@@ -677,8 +677,8 @@ public class NJTree {
 					if (debug)
 						System.out.printf("[%d in ] ", g3);
 
-					// TODO I Changed this line of code so that it matches Miner
-					if (g2 == g4 /* || g2 == 0.0 || g4 == 0.0 */) {
+					// I included minerBug so that it matches Miner
+					if (g2 == g4 || (!minerBug && (g2 == 0.0 || g4 == 0.0))) {
 						og_part = part.get(g3);
 						if (debug)
 							System.out.print("[eqz] ");
@@ -701,11 +701,9 @@ public class NJTree {
 					if (debug)
 						System.out.printf("[%d out] ", g3);
 
-					// TODO I Changed this line of code so that it matches Miner
-					if (part.get(g1) != null || g2 == g4 /*
-														 * || g2 == 0.0 || g4 ==
-														 * 0.0
-														 */) {
+					// I included minerBug so that it matches Miner
+					if (part.get(g1) != null || g2 == g4
+							|| (!minerBug && (g2 == 0.0 || g4 == 0.0))) {
 						og_part = part.get(g1);
 						if (debug)
 							System.out.print("[eqz] ");
