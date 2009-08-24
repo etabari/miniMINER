@@ -7,7 +7,7 @@ import miniminer.utility.Converter;
 
 public class MiniMiner {
 
-	public final static boolean debug = false;
+	public final static boolean debug = true;
 
 	private MultipleSequenceAlignment msa;
 	private NJTree tree;
@@ -80,8 +80,8 @@ public class MiniMiner {
 		}
 	}
 
-	public void createScores() {
-		HashSet<String> leavesAll = tree.createPmSum();
+	public void createScores(boolean minerBug) {
+		HashSet<String> leavesAll = tree.createPmSum(minerBug);
 		score = new int[windowTree.length];
 		int wholeLeafCount = leavesAll.size();
 
@@ -91,7 +91,7 @@ public class MiniMiner {
 			if (debug) {
 				System.out.printf("TEST: Working on Tree %d\n", i+1);
 			}
-			HashSet<String> leaves = windowTree[i].createPmSum();
+			HashSet<String> leaves = windowTree[i].createPmSum(minerBug);
 
 			int leafCount = leaves.size();
 
