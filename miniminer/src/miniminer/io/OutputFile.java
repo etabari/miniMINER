@@ -1,4 +1,4 @@
-package miniminer.files;
+package miniminer.io;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
