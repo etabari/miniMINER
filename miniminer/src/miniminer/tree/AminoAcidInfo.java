@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import miniminer.Sequence;
-import miniminer.utility.DataFileReader;
+import miniminer.io.DataFileReader;
 
 public class AminoAcidInfo {
 

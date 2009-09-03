@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Vector;
 import java.util.zip.DataFormatException;
 
-import miniminer.utility.DataFileReader;
+import miniminer.io.DataFileReader;
 
 public class MultipleSequenceAlignment extends Vector<Sequence> {
 

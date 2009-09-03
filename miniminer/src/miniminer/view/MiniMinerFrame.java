@@ -16,9 +16,9 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
 import miniminer.MultipleSequenceAlignment;
-import miniminer.files.NJFile;
+import miniminer.io.NJFile;
 import miniminer.tree.NJTree;
-import miniminer.utility.FileSelector;
+import miniminer.io.FileSelector;
 
 public class MiniMinerFrame extends JFrame implements ActionListener {
 

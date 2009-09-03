@@ -2,9 +2,9 @@ import java.io.File;
 import java.util.zip.DataFormatException;
 
 import miniminer.MultipleSequenceAlignment;
-import miniminer.files.MSAFile;
-import miniminer.files.NJFile;
-import miniminer.files.ScoreFile;
+import miniminer.io.MSAFile;
+import miniminer.io.NJFile;
+import miniminer.io.ScoreFile;
 import miniminer.tree.NJTree;
 import miniminer.utility.Converter;
 import miniminer.view.MiniMinerFrame;
