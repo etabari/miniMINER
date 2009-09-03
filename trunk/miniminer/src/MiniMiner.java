@@ -7,7 +7,7 @@ import miniminer.utility.Converter;
 
 public class MiniMiner {
 
-	public final static boolean debug = true;
+	public final static boolean debug = false;
 
 	private MultipleSequenceAlignment msa;
 	private NJTree tree;

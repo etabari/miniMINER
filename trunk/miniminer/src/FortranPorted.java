@@ -2,6 +2,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import miniminer.AminoAcid;
 import miniminer.MultipleSequenceAlignment;
 import miniminer.Sequence;
 
@@ -76,7 +77,7 @@ public class FortranPorted {
 		for (int i = 0; i < sequence_number; i++)
 			for (int j = 0; j < conlen; j++)
 				sequence_index[i][j] = aacids
-						.indexOf(SeqAl.get(i).getBaseAt(j));
+						.indexOf(SeqAl.get(i).getBaseCharAt(j));
 
 		dist_mat_set(SeqAl.size(), SeqAl.getSequenceLength(),
 				sequence_index, aamat, distance);
@@ -191,9 +192,9 @@ public class FortranPorted {
 	private static void toss_gaps(MultipleSequenceAlignment seqAl) {
 		for (int i = 0; i < seqAl.getSequenceLength(); i++)
 			for (int j = 1; j < seqAl.size(); j++)
-				if (seqAl.get(j).getBaseIndexAt(j) == Sequence.Gap) {
+				if (seqAl.get(j).getBaseAt(j) == AminoAcid.Gap) {
 					for (int k = 0; k < seqAl.size(); k++)
-						seqAl.get(k).setBaseIndexAt(i, Sequence.Gap);
+						seqAl.get(k).setBaseAt(i, AminoAcid.Gap);
 					break;
 				}
 	}

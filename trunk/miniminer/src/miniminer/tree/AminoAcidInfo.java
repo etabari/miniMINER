@@ -3,7 +3,7 @@ package miniminer.tree;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-import miniminer.Sequence;
+import miniminer.AminoAcid;
 import miniminer.io.DataFileReader;
 
 public class AminoAcidInfo {
@@ -27,7 +27,7 @@ public class AminoAcidInfo {
 			Bases = "-DEKRHNQSTILVFWYCMAGP";
 		else
 			Bases = "-ACGTU";
-		relations = new double[Sequence.AminoAcidCodes.length()][Sequence.AminoAcidCodes.length()];
+		relations = new double[AminoAcid.AminoAcids.length][AminoAcid.AminoAcids.length];
 	}
 
 //	public int aaIndex(char aminoAcid) {
@@ -57,9 +57,9 @@ public class AminoAcidInfo {
 
 					for (int i = 0; i < cols.length; i++)
 						try {
-							int _row = Sequence.AminoAcidCodes.indexOf(Bases.charAt(row));
-							int _i = Sequence.AminoAcidCodes.indexOf(Bases.charAt(i));
-							relations[_row][_i] = Double.parseDouble(cols[i]);
+							AminoAcid _row = AminoAcid.valueOf(Bases.charAt(row));
+							AminoAcid _i =  AminoAcid.valueOf(Bases.charAt(i));
+							relations[_row.ordinal()][_i.ordinal()] = Double.parseDouble(cols[i]);
 						} catch (NumberFormatException e) {
 							return false;
 						}
@@ -86,14 +86,14 @@ public class AminoAcidInfo {
 		return true;
 	}
 	
-	public double getRelation(int AA1, int AA2) {
-		return relations[AA1][AA2];
+	public double getRelation(AminoAcid AA1, AminoAcid AA2) {
+		return relations[AA1.ordinal()][AA2.ordinal()];
 	}
 
 	public double getRelation(char AA1, char AA2) {
-		int AA1idx = Sequence.AminoAcidCodes.indexOf(AA1);
-		int AA2idx = Sequence.AminoAcidCodes.indexOf(AA2);
-		return relations[AA1idx][AA2idx];
+		AminoAcid AA1idx =  AminoAcid.valueOf(AA1);
+		AminoAcid AA2idx = AminoAcid.valueOf(AA2);
+		return relations[AA1idx.ordinal()][AA2idx.ordinal()];
 	}
 
 	

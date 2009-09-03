@@ -1,5 +1,6 @@
 package miniminer.tree;
 
+import miniminer.AminoAcid;
 import miniminer.MultipleSequenceAlignment;
 import miniminer.Sequence;
 
@@ -72,10 +73,10 @@ public class ClustalDistanceMatrix extends BaseDistanceMatrix {
 					if (treeGaps[i])
 						continue;
 
-					int res1 = al.get(m).getBaseIndexAt(i);
-					int res2 = al.get(n).getBaseIndexAt(i);
+					AminoAcid res1 = al.get(m).getBaseAt(i);
+					AminoAcid res2 = al.get(n).getBaseAt(i);
 
-					if (res1 == Sequence.Gap || res2 == Sequence.Gap)
+					if (res1 == AminoAcid.Gap || res2 == AminoAcid.Gap)
 						continue;
 
 					e += 1.0;
