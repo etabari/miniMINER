@@ -1,4 +1,4 @@
-package miniminer.files;
+package miniminer.io;
 
 import miniminer.tree.BaseDistanceMatrix;
 import miniminer.tree.NJTree;

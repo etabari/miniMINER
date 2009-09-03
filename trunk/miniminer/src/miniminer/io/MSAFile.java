@@ -1,4 +1,4 @@
-package miniminer.files;
+package miniminer.io;
 
 import miniminer.MultipleSequenceAlignment;
 import miniminer.Sequence;

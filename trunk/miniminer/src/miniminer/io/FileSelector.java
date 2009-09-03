@@ -1,4 +1,4 @@
-package miniminer.utility;
+package miniminer.io;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

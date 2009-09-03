@@ -1,4 +1,4 @@
-package miniminer.files;
+package miniminer.io;
 
 public class ScoreFile extends OutputFile {
 
