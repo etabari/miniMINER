@@ -1,5 +1,6 @@
 package miniminer.tree;
 
+import miniminer.AminoAcid;
 import miniminer.MultipleSequenceAlignment;
 
 public class DistanceMatrix extends BaseDistanceMatrix {
@@ -24,8 +25,8 @@ public class DistanceMatrix extends BaseDistanceMatrix {
 		for (int i = 0; i < getSize(); i++)
 			for (int j = i + 1; j < getSize(); j++) {
 				double sum = 0.0;
-				int[] iAAIdx = al.get(i).getData();
-				int[] jAAIdx = al.get(j).getData();
+				AminoAcid[] iAAIdx = al.get(i).getData();
+				AminoAcid[] jAAIdx = al.get(j).getData();
 
 				for (int c = 0; c < iAAIdx.length; c++)
 					sum += aaInfo.getRelation(iAAIdx[c], jAAIdx[c]);

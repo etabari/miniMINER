@@ -13,7 +13,7 @@ import miniminer.utility.Converter;
 
 public class NJTree {
 
-	private final static boolean debug = true;
+	private final static boolean debug = false;
 
 	private MultipleSequenceAlignment msa;
 	private BaseDistanceMatrix distMat;

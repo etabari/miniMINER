@@ -1,5 +1,6 @@
 package miniminer.tree;
 
+import miniminer.AminoAcid;
 import miniminer.MultipleSequenceAlignment;
 import miniminer.Sequence;
 
@@ -52,7 +53,7 @@ public class BaseDistanceMatrix {
 	private void findGaps(MultipleSequenceAlignment al) {
 		for (int pos = 0; pos < treeGaps.length; pos++) 
 			for (int seq = 0; seq < al.size(); seq++)
-				if (al.get(seq).getBaseIndexAt(pos) == Sequence.Gap) {
+				if (al.get(seq).getBaseAt(pos) == AminoAcid.Gap) {
 					treeGaps[pos] = true;
 					break;
 				}

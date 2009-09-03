@@ -142,7 +142,7 @@ public class MultipleSequenceAlignment extends Vector<Sequence> {
 		for (int pos = 0; pos < gapCount.length; pos++) {
 			gapCount[pos] = 0;
 			for (int seq = 0; seq < size(); seq++)
-				if (get(seq).getBaseIndexAt(pos) == Sequence.Gap)
+				if (get(seq).getBaseAt(pos) == AminoAcid.Gap)
 					gapCount[pos]++;
 
 			if (1.0 * gapCount[pos] / size() <= maskFilter / 100.0) {
@@ -151,13 +151,13 @@ public class MultipleSequenceAlignment extends Vector<Sequence> {
 			}
 		}
 
-		int[] maskedSeq = new int[newSeqLength];
+		AminoAcid[] maskedSeq = new AminoAcid[newSeqLength];
 
 		for (int seq = 0; seq < size(); seq++) {
 			int newSeqPos = 0;
 			for (int pos = 0; pos < gapCount.length; pos++)
 				if (gapCount[pos] == 0) {
-					maskedSeq[newSeqPos] = get(seq).getBaseIndexAt(pos);
+					maskedSeq[newSeqPos] = get(seq).getBaseAt(pos);
 					newSeqPos++;
 				}
 			Sequence sequence = new Sequence(get(seq).getName(), maskedSeq);
