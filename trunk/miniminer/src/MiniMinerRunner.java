@@ -76,7 +76,8 @@ public class MiniMinerRunner {
 			System.err.printf("Input file '%s' does not exists.\n", in_filename);
 			return;
 		}
-
+		
+		System.out.printf("Opening file: %s\n", in_filename);
 		MultipleSequenceAlignment msa = new MultipleSequenceAlignment();
 		try {
 			if (!msa.loadSeqs(in_filename)) {
