@@ -2,7 +2,6 @@ package miniminer.tree;
 
 import miniminer.AminoAcid;
 import miniminer.MultipleSequenceAlignment;
-import miniminer.Sequence;
 
 public class BaseDistanceMatrix {
 

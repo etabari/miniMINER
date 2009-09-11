@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import miniminer.AminoAcid;
 import miniminer.MultipleSequenceAlignment;
-import miniminer.Sequence;
 
 
 public class FortranPorted {
