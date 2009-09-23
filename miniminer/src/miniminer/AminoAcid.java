@@ -22,25 +22,32 @@ public enum AminoAcid {
 	W("Tryptophan", "Trp", 'W', false, "neutral", -0.9, 0.012720), // 
 	Y("Tyrosine", "Tyr", 'Y', true, "neutral", -1.3, 0.032955), //
 	V("Valine", "Val", 'V', false, "neutral", 4.2, 0.063321), //
-	Gap("Gap", "Gap", '-', false, "", 0.0, 0.0);
+
+	B("B", "B", 'B', false, "", 0.0, 0.0), //
+	X("X", "X", 'X', false, "", 0.0, 0.0), //
+	Z("Z", "Z", 'Z', false, "", 0.0, 0.0), //
+	O("O", "O", 'O', false, "", 0.0, 0.0), //
+	J("J", "J", 'J', false, "", 0.0, 0.0), //
+	U("U", "U", 'U', false, "", 0.0, 0.0), //
+
+	Gap("Gap", "Gap", '-', false, "", 0.0, 0.0), //
+	Unknown("Unknown", "Unkwon", '?', false, "", 0.0, 0.0)//
 	/* @@formatter:on */
+	;//
 
 	private final char letter;
-	private final int letterIndex;
 	private final String shortName;
 	private final String name;
 	private final boolean polarity;
 	private final String sidechainCharge;
 	private final double hidropathyIndex;
 	private final double backgroundAbundance;
+	
+	private final static String WarningMessage = "WARNING: threre is an illigal character ('%c') in the sequences. miniMiner is treating it as a [Unknown].\n";
 
-	AminoAcid(String name, String shortName, char letter, boolean polarity,
-			String sideChaneCharge, double hydropathyIndex,
-			double backgroundAbundance) {
+	AminoAcid(String name, String shortName, char letter, boolean polarity, String sideChaneCharge,
+		double hydropathyIndex, double backgroundAbundance) {
 		this.letter = letter;
-		// Gap will get a negative number
-		this.letterIndex = Character.getNumericValue(letter)
-				- Character.getNumericValue('A');
 		this.shortName = shortName;
 		this.name = name;
 		this.hidropathyIndex = hydropathyIndex;
@@ -78,56 +85,17 @@ public enum AminoAcid {
 	}
 
 	public static AminoAcid[] AminoAcids = AminoAcid.values();
-	private static int[] aminoAcidIndex = null;
-
-	static {
-		/**
-		 * To improve the performance, a reverse index of amino acid character
-		 * codes are stored.
-		 * 
-		 * AminoAcidIndex would have be list like this:
-		 * 
-		 * index : 0 1 2 3 4 5 ... value : A - C D E F ...
-		 * 
-		 * this way, for an character, one, should calculate the letter order if
-		 * 
-		 */
-
-		aminoAcidIndex = new int[26];
-
-		for (int i = 0; i < aminoAcidIndex.length; i++)
-			aminoAcidIndex[i] = -1;
-
-		for (int i = 0; i < AminoAcids.length; i++)
-			if (AminoAcids[i].letterIndex >= 0)
-				aminoAcidIndex[AminoAcids[i].letterIndex] = i;
-	}
 
 	public static AminoAcid valueOf(char letter) {
-		int index = Character.getNumericValue(letter)
-				- Character.getNumericValue('A');
-		if (aminoAcidIndex == null)
-			throw new IndexOutOfBoundsException(
-					"aminoAcidIndex vector is empty");
-
-		if (index < 0 || index > aminoAcidIndex.length) {
-			if (letter != ' ' && letter != '.' && letter != '-')
-				System.err
-						.printf(
-								"WARNING: threre is an illigal character ('%c') in the sequences. miniMiner is treating it as a Gap.\n",
-								letter);
-			return Gap;
-		}
-
-		int index2 = aminoAcidIndex[index];
-		if (index2 < 0 || index2 > AminoAcids.length) {
-			System.err
-					.printf(
-							"WARNING: threre is an illigal character ('%c') in the sequences. miniMiner is treating it as a Gap.\n",
-							letter);
-			return Gap;
-		}
-		return AminoAcids[index2];
+		if (letter == ' ' && letter == '.' || letter == '-')
+			return AminoAcid.Gap;
+		else
+			try {
+				return AminoAcid.valueOf("" + letter);
+			} catch (IllegalArgumentException iae) {
+				System.err.printf(WarningMessage, letter);
+				return AminoAcid.Unknown;
+			}
 	}
 
 	@Override
