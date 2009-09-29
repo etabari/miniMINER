@@ -1,5 +1,7 @@
 package miniminer.io;
 
+import java.io.BufferedWriter;
+
 import miniminer.tree.BaseDistanceMatrix;
 import miniminer.tree.NJTree;
 
@@ -7,8 +9,13 @@ public class NJFile extends OutputFile {
 
 	NJTree tree;
 
-	public NJFile(Object file, NJTree tree) {
+	public NJFile(String file, NJTree tree) {
 		super(file);
+		this.tree = tree;
+	}
+	
+	public NJFile(BufferedWriter writer, NJTree tree) {
+		super(writer);
 		this.tree = tree;
 	}
 

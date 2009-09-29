@@ -1,24 +1,38 @@
 package miniminer.io;
 
+import java.io.BufferedWriter;
+
 public class ScoreFile extends OutputFile {
 
 	private int[] scores_i;
 	private double[] scores_d;
 
-	public ScoreFile(Object file, int[] scores) {
-		super(file);
-		this.scores_i = scores;
-		this.scores_d = null;
-	}
-
-	public ScoreFile(Object file, double[] scores) {
-		super(file);
-		this.scores_d = scores;
-		this.scores_i = null;
+	public ScoreFile(String filename, int[] scores) {
+		super(filename);
+		setData(scores, null);
 	}
 
 
+	public ScoreFile(BufferedWriter writer, int[] scores) {
+		super(writer);
+		setData(scores, null);
+	}
+
+	public ScoreFile(String filename, double[] scores) {
+		super(filename);
+		setData(null, scores);
+	}
 	
+
+	public ScoreFile(BufferedWriter writer, double[] scores) {
+		super(writer);
+		setData(null, scores);
+	}
+	
+	private void setData(int[] iScores, double[]dScores) {
+		this.scores_i = iScores;
+		this.scores_d = dScores;
+	}
 
 	@Override
 	protected void writeContent() {
