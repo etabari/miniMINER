@@ -16,7 +16,7 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
 import miniminer.MultipleSequenceAlignment;
-import miniminer.io.NJFile;
+//import miniminer.io.NJFile;
 import miniminer.tree.NJTree;
 import miniminer.io.FileSelector;
 
@@ -144,12 +144,14 @@ public class MiniMinerFrame extends JFrame implements ActionListener {
 			logText.append("  No file selected.\n");
 			return;
 		}
-		NJFile njFile = new NJFile(file, njTree);
-		njFile.createFile();
+		//TODO: think about a way to handle both JWS and OpenDialog.
+		
+		//NJFile njFile = new NJFile(file, njTree);
+		//njFile.createFile();
 
-		logText.append("Creating the file ...\n");
-		njFile.createFile();
-		logText.append("   done - file Created.\n");
+		//logText.append("Creating the file ...\n");
+		//njFile.createFile();
+		//logText.append("   done - file Created.\n");
 
 	}
 }

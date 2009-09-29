@@ -9,25 +9,24 @@ public abstract class OutputFile {
 	String filename = null;
 	BufferedWriter bw = null;
 
-	public OutputFile(Object file) {
-		if (file == null || file instanceof String)
-			this.filename = (String) file;
-		else if (file instanceof BufferedWriter) {
-			this.filename = "";
-			bw = (BufferedWriter) file;
-		}
+	public OutputFile(String filename) {
+		this.filename = (String) filename;
 	}
 
-	
+	public OutputFile(BufferedWriter writer) {
+		this.filename = "";
+		bw = (BufferedWriter) writer;
+	}
+
 	protected abstract void writeContent();
-	
+
 	public void createFile() {
 		if (openFile()) {
 			writeContent();
 			close();
 		}
 	}
-	
+
 	protected boolean openFile() {
 		if (filename == null)
 			return false;
