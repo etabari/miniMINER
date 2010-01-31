@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.Timer;
 import java.util.zip.DataFormatException;
 
 import miniminer.MultipleSequenceAlignment;
@@ -12,42 +13,21 @@ import miniminer.view.MiniMinerFrame;
 public class MiniMinerRunner {
 	public static void main(String[] args) {
 
-		if ((args.length == 0)
-			|| (args.length < 2 && !args[0].equalsIgnoreCase("-x"))
-			|| !(args[0].equalsIgnoreCase("-x") || args[0].equalsIgnoreCase("-n")
-				|| args[0].equalsIgnoreCase("-a") || args[0].equalsIgnoreCase("-m"))) {
-
-			System.err.println("Syntax:");
-			System.err.println("  MiniMiner (-x|-n|-a|-m) [-tXX] [-k] [-wXX] [-s] inputAlignmentfilename\n");
-			System.err.println("mode (-x|-n|-a|-m):");
-			System.err.println("   -x: run in Window mode");
-			System.err.println("   -n: runs and create the total NJ Tree for the alignment");
-			System.err.println("   -a: runs and create all NJ Trees for the alignment, windows size should be determined\n");
-			System.err.println("   -m: runs and create score file.\n");
-
-			System.err.println("\noptions:");
-			System.err.println("   -tXX: include -t with a number to toss Gaps (exclude postions with gaps in all sequences)");
-			System.err.println("         -t with an integer (xx) will toss gaps in all sequences if there is a Gap in xx percent of sequences");
-
-			System.err.println("         It is considered 50 if not specified.");
-
-			System.err.println("   -k: include -k to apply Kimura method");
-			System.err.println("   -b: include -k to get exact MINER results (used for -m mode)");
-			System.err.println("   -j: include -j to apply Clustal Exclude Gaps methods (removes all gaps if a sequence has a gap)");
-
-			System.err.println("   -wXX: include -w with a number to determine the window size");
-			System.err.println("         (used for -a mode), it is considered 5 if not specified.");
-			System.err.println("   -s: include -s to create windowed alingment files");
-			System.err.println("         (used for -a mode)");
+		if ((args.length < 2) || //
+			!( // args[0].equalsIgnoreCase("-x") ||
+			args[0].equalsIgnoreCase("-n") || //
+				args[0].equalsIgnoreCase("-a") || //
+			args[0].equalsIgnoreCase("-m"))) {
+			printSyntax();
 			return;
 		}
 
-		if (args[0].equalsIgnoreCase("-x")) {
-			System.out.print("running windows !");
-			MiniMinerFrame frame = new MiniMinerFrame();
-			frame.setVisible(true);
-			return;
-		}
+//		if (args[0].equalsIgnoreCase("-x")) {
+//			System.out.print("running windows !");
+//			MiniMinerFrame frame = new MiniMinerFrame();
+//			frame.setVisible(true);
+//			return;
+//		}
 
 		if (!args[0].equalsIgnoreCase("-n") && !args[0].equalsIgnoreCase("-a")
 			&& !args[0].equalsIgnoreCase("-m"))
@@ -73,10 +53,15 @@ public class MiniMinerRunner {
 		String out_filename = args[args.length - 1] + ".nj";
 
 		if (!(new File(in_filename)).exists()) {
-			System.err.printf("Input file '%s' does not exists.\n", in_filename);
+			if (in_filename.startsWith("-")) {
+				System.err.println("Input file not specified");
+				System.err.println("");
+				printSyntax();
+			} else
+				System.err.printf("Input file '%s' does not exists.\n", in_filename);
 			return;
 		}
-		
+
 		System.out.printf("Opening file: %s\n", in_filename);
 		MultipleSequenceAlignment msa = new MultipleSequenceAlignment();
 		try {
@@ -85,12 +70,14 @@ public class MiniMinerRunner {
 				return;
 			}
 			System.out.println("MSA file loaded.");
-			System.out.printf("%d sequences are loaded from file (sequence length: %d).\n", msa.size(), msa.getSequenceLength());
+			System.out.printf("%d sequences are loaded from file (sequence length: %d).\n", msa
+				.size(), msa.getSequenceLength());
 			if (tossGaps != 100) {
 				msa = msa.getMasked(tossGaps);
-				System.out.printf("%d%% masking applied (sequence length: %d).\n", tossGaps, msa.getSequenceLength());
+				System.out.printf("%d%% masking applied (sequence length: %d).\n", tossGaps, msa
+					.getSequenceLength());
 				System.out.println("Saving masked msa file");
-				MSAFile f = new MSAFile(in_filename+".masked", msa);
+				MSAFile f = new MSAFile(in_filename + ".masked", msa);
 				f.createFile();
 			}
 		} catch (DataFormatException ex) {
@@ -122,10 +109,10 @@ public class MiniMinerRunner {
 			}
 			if (windowSize < 1)
 				windowSize = 1;
-			
-			if (windowSize>msa.getSequenceLength())
+
+			if (windowSize > msa.getSequenceLength())
 				windowSize = msa.getSequenceLength();
-				
+
 			System.out.printf("Creating All NJ Trees (Window size: %d)...\n", windowSize);
 			MiniMiner mm = new MiniMiner(msa, clustalTossGaps, kimura);
 			mm.createAll(windowSize, storeAndCreateSubAlignments);
@@ -151,24 +138,26 @@ public class MiniMinerRunner {
 			for (String s : args) {
 				if (s.startsWith("-w"))
 					windowSize = Converter.toInt(s.substring(2), 5);
-				 if (s.equalsIgnoreCase("-s"))
-					 storeAndCreateSubAlignments = true;
+				if (s.equalsIgnoreCase("-s"))
+					storeAndCreateSubAlignments = true;
 
 			}
-			
+			//long start = System.currentTimeMillis();
 			if (windowSize < 1)
 				windowSize = 5;
 
 			MiniMiner mm = new MiniMiner(msa, clustalTossGaps, kimura);
 			System.out.println("Creating All NJ Trees...");
 			mm.createAll(windowSize, storeAndCreateSubAlignments);
-			
+
 			System.out.println("Creating All Scores...");
 			mm.createScores(minerBug);
-
+			//long stop = System.currentTimeMillis(); 
+			//System.out.println(stop-start);
+			
 			String fn = in_filename + ".scores.txt";
 			ScoreFile scoreFile = new ScoreFile(fn, mm.getScores());
-			System.out.println("Saving score file");
+			System.out.println("Saving score file...");
 			scoreFile.createFile();
 
 			fn = in_filename + ".scores.z.txt";
@@ -178,5 +167,34 @@ public class MiniMinerRunner {
 			return;
 		}
 
+	}
+
+	private static void printSyntax() {
+		System.err.println("Syntax:");
+		System.err
+			.println("  MiniMiner (-n|-a|-m) [-tXX] [-k] [-wXX] [-s] inputAlignmentfilename\n");
+		System.err.println("mode (-n|-a|-m):");
+		// System.err.println("   -x: run in Window mode");
+		System.err.println("   -n: runs and create the total NJ Tree for the alignment");
+		System.err
+			.println("   -a: runs and create all NJ Trees for the alignment, windows size should be determined\n");
+		System.err.println("   -m: runs and create score file. (miner)\n");
+
+		System.err.println("\noptions:");
+		System.err
+			.println("   -tXX: include -t with a number to toss Gaps (exclude postions with gaps in all sequences)");
+		System.err
+			.println("         -t with an integer (xx) will toss gaps in all sequences if there is a Gap in xx percent of sequences");
+		System.err.println("         It is considered 50 if not specified.");
+
+		System.err.println("   -k: include -k to apply Kimura method");
+		System.err.println("   -b: include -b to get exact MINER results (used for -m mode)");
+		System.err
+			.println("   -j: include -j to apply Clustal Exclude Gaps methods (removes all gaps if a sequence has a gap)");
+
+		System.err.println("   -wXX: include -w with a number to determine the window size");
+		System.err.println("         (used for -a mode), it is considered 5 if not specified.");
+		System.err.println("   -s: include -s to create windowed alingment files");
+		System.err.println("         (used for -a mode)");
 	}
 }
