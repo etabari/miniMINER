@@ -1,5 +1,5 @@
 import java.io.File;
-import java.util.Timer;
+//import java.util.Timer;
 import java.util.zip.DataFormatException;
 
 import miniminer.MultipleSequenceAlignment;
@@ -8,7 +8,7 @@ import miniminer.io.NJFile;
 import miniminer.io.ScoreFile;
 import miniminer.tree.NJTree;
 import miniminer.utility.Converter;
-import miniminer.view.MiniMinerFrame;
+//import miniminer.view.MiniMinerFrame;
 
 public class MiniMinerRunner {
 	public static void main(String[] args) {
@@ -55,7 +55,7 @@ public class MiniMinerRunner {
 		if (!(new File(in_filename)).exists()) {
 			if (in_filename.startsWith("-")) {
 				System.err.println("Input file not specified");
-				System.err.println("");
+				System.err.println();
 				printSyntax();
 			} else
 				System.err.printf("Input file '%s' does not exists.\n", in_filename);
