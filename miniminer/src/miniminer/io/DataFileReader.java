@@ -39,6 +39,7 @@ public class DataFileReader {
                 InputStream z_e = zf.getInputStream(e);
                 InputStreamReader is_z_e = new InputStreamReader(z_e);
                 buf_reader = new BufferedReader(is_z_e);
+                zf.close();
             }
         } else if (ext.equals("gz")) {
             FileInputStream f = new FileInputStream(filename);
