@@ -6,4 +6,4 @@ The software miniMINER is a streamlined and self-contained tool for PM identific
 
 
 
-Check the Wiki for the Manual and usage
+Check the [Wiki pages](https://github.com/etabari/miniMINER/wiki) for the Manual and usage
